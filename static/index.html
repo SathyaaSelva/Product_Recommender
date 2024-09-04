@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 20px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Make a Prediction</h1>
+    <form id="predictionForm">
+        <label for="userId">Enter User ID:</label>
+        <input type="text" id="userId" name="userId" required>
+
+        <label for="itemId">Enter Item ID:</label>
+        <input type="text" id="itemId" name="itemId" required>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    document.getElementById('predictionForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const userId = document.getElementById('userId').value;
+        const itemId = document.getElementById('itemId').value;
+
+        const data = {
+            user_id: userId,
+            item_id: itemId
+        };
+
+        fetch('http://127.0.0.1:5000/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            if (data.error) {
+                resultDiv.textContent = `Error: ${data.error}`;
+            } else {
+                resultDiv.textContent = `Prediction: ${data.prediction}`;
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+
+</body>
+</html>
