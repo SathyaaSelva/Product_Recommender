@@ -1,9 +1,9 @@
-from flask import Flask,send_from_directory, request, jsonify
+from flask import Flask, send_from_directory, request, jsonify
 import pickle
 
 app = Flask(__name__)
 
-# Load the trained model
+# Load the model
 with open('product_recommendation_model.pkl', 'rb') as file:
     model = pickle.load(file)
 
@@ -14,17 +14,15 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()
-    user_id = data.get('user_id')
-    item_id = data.get('item_id')
+    product = data.get('key_product_name')
 
-    if not user_id or not item_id:
-        return jsonify({'error': 'Invalid input'}), 400
+    if not product:
+        return jsonify({'error': 'Invalid input, product name is required'}), 400
 
     try:
-        # Perform prediction
-        prediction = model.predict(user_id, item_id)
+        # Since model.predict requires both user_id and item_id, we'll use product name for both.
+        prediction = model.predict(product, product)
 
-        # Check if prediction is valid
         if prediction is None:
             return jsonify({'error': 'Prediction failed'}), 500
 

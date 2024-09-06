@@ -60,11 +60,8 @@
 <div class="container">
     <h1>Make a Prediction</h1>
     <form id="predictionForm">
-        <label for="userId">Enter User ID:</label>
-        <input type="text" id="userId" name="userId" required>
-
-        <label for="itemId">Enter Item ID:</label>
-        <input type="text" id="itemId" name="itemId" required>
+        <label for="key_product_name">Product Name : </label>
+        <input type="text" id="key_product_name" name="key_product_name" required>
 
         <button type="submit">Predict</button>
     </form>
@@ -76,12 +73,10 @@
     document.getElementById('predictionForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const userId = document.getElementById('userId').value;
-        const itemId = document.getElementById('itemId').value;
+        const key_product_name = document.getElementById('key_product_name').value;
 
         const data = {
-            user_id: userId,
-            item_id: itemId
+            key_product_name: key_product_name,  // Ensure consistency in key naming
         };
 
         fetch('http://127.0.0.1:5000/predict', {
